@@ -1,0 +1,57 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import org.junit.*;
+import static org.junit.Assert.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+
+public class MailBox {
+    private WebDriver driver;
+    private String baseUrl;
+    private boolean acceptNextAlert = true;
+    private StringBuffer verificationErrors = new StringBuffer();
+    private String searchWord;
+
+    @Before
+    public void setUp() throws Exception {
+        driver = new ChromeDriver();
+        baseUrl = "https://mail.ru/";
+        searchWord = "Hello";
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void testMailBox() throws Exception {
+        driver.get(baseUrl + "/");
+        driver.findElement(By.id("mailbox__login")).clear();
+        driver.findElement(By.id("mailbox__login")).sendKeys("adelaida.kain");
+        driver.findElement(By.id("mailbox__password")).clear();
+        driver.findElement(By.id("mailbox__password")).sendKeys("asdffdsA1");
+        driver.findElement(By.id("mailbox__auth__button")).click();
+        driver.findElement(By.xpath(".//*[@class='b-toolbar__group b-toolbar__group_left']/div/a/span")).click();
+        driver.findElement(By.cssSelector("textarea.js-input.compose__labels__input")).clear();
+        driver.findElement(By.cssSelector("textarea.js-input.compose__labels__input")).sendKeys("dana_kirilyuk@mail.ru");
+        driver.findElement(By.name("Subject")).clear();
+        driver.findElement(By.name("Subject")).sendKeys(searchWord);
+        driver.findElement(By.xpath(".//*[@id='b-toolbar__right']/div[3]/div/div[2]/div[1]/div/span")).click();
+        driver.findElement(By.xpath(".//*[@id='MailRuConfirm']/div/div[3]/form/div[2]/button[1]")).click();
+        driver.findElement(By.xpath(".//*[@id='b-nav_folders']/div/div[2]/a/span")).click();
+        List<WebElement> resultList = driver.findElements(By.cssSelector("b-datalist__item__subj"));
+        for (WebElement letter: resultList){
+            assertTrue("Did not find the letter!", letter.getText().contains(searchWord.toLowerCase()));
+
+        }
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+       driver.quit();
+        String verificationErrorString = verificationErrors.toString();
+        if (!"".equals(verificationErrorString)) {
+            fail(verificationErrorString);
+        }
+    }
+}

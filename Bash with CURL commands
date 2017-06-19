@@ -1,0 +1,15 @@
+#!/bin/bash
+
+curl -i \
+-X GET http://soft.it-hillel.com.ua:3000 \
+
+curl -i \
+-X GET http://soft.it-hillel.com.ua:3000/api/users \
+
+curl -i \
+-X GET http://soft.it-hillel.com.ua:3000/api/users/refreshAdmins \
+
+curl -i \
+-H "Accept: application/json" \
+-H "Content-Type:application/json" \
+-X POST --data "{\"name\": \"Jane\", \"phone\": \"0938008080\", \"role\": \"Student\"}" http://soft.it-hillel.com.ua:3000/api/users
